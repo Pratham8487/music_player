@@ -1,9 +1,22 @@
-import type { YouTubeVideo } from "../../types/Types";
+import type { YouTubeVideo, VideoItem } from "../../types/Types";
 import { User, Eye } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-export const VideoCard = ({ video }: { video: YouTubeVideo }) => {
+type VideoCardProps = {
+  video: VideoItem;
+};
+export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
+// export const VideoCard = ({ video }: { video: YouTubeVideo }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/watch/${video.id}`, { state: { video } });
+  };
   return (
-    <div className="h-full flex flex-col bg-black rounded-lg overflow-hidden py-1 transition-shadow duration-300 justify-between">
+    <div
+      onClick={handleClick}
+      className="h-full flex flex-col bg-black rounded-lg overflow-hidden py-1 transition-shadow duration-300 justify-between"
+    >
       <div className="relative p-3 hover:scale-105 transition-all duration-700">
         <img
           src={video.thumbnail}

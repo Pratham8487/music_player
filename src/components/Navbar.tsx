@@ -10,7 +10,8 @@ const Navbar = () => {
         <Link to={`/`}>
           <div className="flex items-center gap-3 border border-gray-700 rounded-xl hover:rounded-2xl p-3 space-x-4 hover:scale-105 cursor-pointer transition-all duration-300">
             <h1 className="text-lg font-bold tracking-wider hidden sm:block text-red-200 ">
-             <span className="text-red-700 ">U</span>-Tube
+             <span className="text-red-700 ">U</span>-Tube{" "}
+             <span className="text-zinc-600 font-semibold">Music</span>
             </h1>
             <IoHomeOutline className="w-8 h-8 text-white" />
           </div>
