@@ -72,115 +72,117 @@ const VideoPlayer = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 min-h-screen overflow-hidden">
-      <div className="lg:col-span-2 p-4">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <YouTubeVideo
-            videoId={selectedVideo.id}
-            title={selectedVideo.title}
-          />
-        </div>
-        <div className="py-3 gap-5">
-          <h6 className="font-bold text-shadow-lg text-lg text-pretty -tracking-tighter line-clamp-2">
-            {data?.title}
-          </h6>
-          <div>
-            <div className="flex justify-items-start space-x-5 items-center">
-              <img src={data?.thumbnail} className="rounded-full w-10 h-10" />
-              <h3 className="space-x-8 font-bold text-md text-pretty -tracking-tighter line-clamp-2">
-                {data?.channelTitle}
-              </h3>
-              <div
-                className="border inline-block px-2 py-1 rounded-full border-gray-300 hover:border-white font-bold text-zinc-700 cursor-pointer"
-                onClick={handleSubscribe}
-              >
-                <span
-                  className={`text-sm ${
-                    Subscribe === "❤"
-                      ? "text-red-500 font-bold"
-                      : "text-zinc-700"
-                  }`}
+    <Container className="">
+      <div className="grid grid-cols-1 lg:grid-cols-3 min-h-screen overflow-hidden px-auto">
+        <div className="lg:col-span-2 p-4">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-800 overflow-hidden">
+            <YouTubeVideo
+              videoId={selectedVideo.id}
+              title={selectedVideo.title}
+            />
+          </div>
+          <div className="py-3 gap-5">
+            <h6 className="font-bold text-shadow-lg text-lg text-pretty -tracking-tighter line-clamp-2">
+              {data?.title}
+            </h6>
+            <div>
+              <div className="flex justify-items-start space-x-5 items-center">
+                <img src={data?.thumbnail} className="rounded-full w-10 h-10" />
+                <h3 className="space-x-8 font-bold text-md text-pretty -tracking-tighter line-clamp-2">
+                  {data?.channelTitle}
+                </h3>
+                <div
+                  className="border inline-block px-2 py-1 rounded-full border-gray-300 hover:border-white font-bold text-zinc-700 cursor-pointer"
+                  onClick={handleSubscribe}
                 >
-                  {Subscribe}
-                </span>
+                  <span
+                    className={`text-sm ${
+                      Subscribe === "❤"
+                        ? "text-red-500 font-bold"
+                        : "text-zinc-700"
+                    }`}
+                  >
+                    {Subscribe}
+                  </span>
+                </div>
               </div>
+              <h4 className="font-semibold text-sm text-pretty -tracking-tighter line-clamp-2">
+                {data?.description}
+              </h4>
             </div>
-            <h4 className="font-semibold text-sm text-pretty -tracking-tighter line-clamp-2">
-              {data?.description}
-            </h4>
           </div>
         </div>
-      </div>
 
-      <div className="lg:col-span-1 p-4">
-        <div className="rounded-xl shadow-lg overflow-hidden bg-gray-300">
-          <h2 className="text-xl font-semibold p-4 border-b text-gray-800 items-center flex justify-center ">
-            Music
-          </h2>
-          <div className="overflow-y-auto max-h-[calc(100vh-150px)]">
-            {pendingTrendingList
-              ? Array(4)
-                  .fill(0)
-                  .map((_, index) => (
-                    <div key={index} className="flex p-3">
+        <div className="lg:col-span-1 p-4">
+          <div className="rounded-xl shadow-lg overflow-hidden bg-gray-950 text-white ">
+            <h2 className="text-xl font-semibold p-4 border-b text-white items-center flex justify-center ">
+              Music
+            </h2>
+            <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
+              {pendingTrendingList
+                ? Array(4)
+                    .fill(0)
+                    .map((_, index) => (
+                      <div key={index} className="flex p-3">
+                        <div className="w-32 h-20 bg-gray-300 flex-shrink-0 relative rounded overflow-hidden">
+                          <Skeleton height={80} width={128} />
+                          <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
+                            <Skeleton height={14} width={30} />
+                          </div>
+                        </div>
+                        <div className="ml-3 flex-grow">
+                          <Skeleton height={16} width={150} />
+                          <Skeleton
+                            height={12}
+                            width={100}
+                            style={{ marginTop: 4 }}
+                          />
+                          <Skeleton
+                            height={12}
+                            width={120}
+                            style={{ marginTop: 4 }}
+                          />
+                        </div>
+                      </div>
+                    ))
+                : trendingList
+                ? trendingList.map((video) => (
+                    <div
+                      key={video.id}
+                      className={`flex p-3 cursor-pointer hover:bg-gray-800 transition-all duration-500 ${
+                        selectedVideo.id === video.id ? "bg-gray-100" : ""
+                      }`}
+                      onClick={() => setSelectedVideo(video)}
+                    >
                       <div className="w-32 h-20 bg-gray-300 flex-shrink-0 relative rounded overflow-hidden">
-                        <Skeleton height={80} width={128} />
+                        <img
+                          src={video.thumbnail}
+                          alt={video.title}
+                          className="w-full h-full object-cover"
+                        />
                         <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
-                          <Skeleton height={14} width={30} />
+                          {video.duration}
                         </div>
                       </div>
                       <div className="ml-3 flex-grow">
-                        <Skeleton height={16} width={150} />
-                        <Skeleton
-                          height={12}
-                          width={100}
-                          style={{ marginTop: 4 }}
-                        />
-                        <Skeleton
-                          height={12}
-                          width={120}
-                          style={{ marginTop: 4 }}
-                        />
+                        <h3 className="font-medium text-sm text-white line-clamp-2">
+                          {video.title}
+                        </h3>
+                        <p className="text-xs text-gray-200 font-mono mt-1">
+                          {video.channelTitle}
+                        </p>
+                        <p className="text-xs text-gray-300 font-semibold">
+                          {video.publishedTime} • {video.viewCount}
+                        </p>
                       </div>
                     </div>
                   ))
-              : trendingList
-              ? trendingList.map((video) => (
-                  <div
-                    key={video.id}
-                    className={`flex p-3 cursor-pointer hover:bg-gray-100 transition ${
-                      selectedVideo.id === video.id ? "bg-gray-100" : ""
-                    }`}
-                    onClick={() => setSelectedVideo(video)}
-                  >
-                    <div className="w-32 h-20 bg-gray-300 flex-shrink-0 relative rounded overflow-hidden">
-                      <img
-                        src={video.thumbnail}
-                        alt={video.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute bottom-1 right-1 bg-black bg-opacity-70 text-white text-xs px-1 rounded">
-                        {video.duration}
-                      </div>
-                    </div>
-                    <div className="ml-3 flex-grow">
-                      <h3 className="font-medium text-sm text-gray-800 line-clamp-2">
-                        {video.title}
-                      </h3>
-                      <p className="text-xs text-gray-600 font-mono mt-1">
-                        {video.channelTitle}
-                      </p>
-                      <p className="text-xs text-gray-700 font-semibold">
-                        {video.publishedTime} • {video.viewCount}
-                      </p>
-                    </div>
-                  </div>
-                ))
-              : null}
+                : null}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Container>
   );
 };
 

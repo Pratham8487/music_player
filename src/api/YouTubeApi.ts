@@ -86,7 +86,10 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
         snippet: {
           title: any;
           channelTitle: any;
-          thumbnails: { high: { url: any } };
+          thumbnails: {
+            maxres: any;
+            high: { url: any };
+          };
           publishedAt: any;
         };
         statistics: { viewCount: string };
@@ -99,7 +102,7 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
           id: item.id,
           title: item.snippet.title,
           channelTitle: item.snippet.channelTitle,
-          thumbnail: item.snippet.thumbnails.high.url,
+          thumbnail: item.snippet.thumbnails.maxres.url,
           duration: formatDuration(item.contentDetails.duration),
           viewCount: formatViewCount(item.statistics.viewCount),
           startTime: 0,
