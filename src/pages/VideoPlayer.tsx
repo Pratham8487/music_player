@@ -16,7 +16,7 @@ const VideoPlayer = () => {
   const { id } = useParams();
   const location = useLocation();
   const stateVideo = location.state?.video;
-  const [Subscribe, setSubscribe] = useState("Subscribe");
+  const [Subscribe, setSubscribe] = useState("🤍");
 
   const [trendingVideos] = useState<VideoData[]>([
     { id: "wGv79GFS4Vg", title: "Introduction To WiseGPT" },
@@ -42,10 +42,10 @@ const VideoPlayer = () => {
   });
 
   const handleSubscribe = () => {
-    if (Subscribe === "Subscribe") {
-      setSubscribe("Subscribed");
+    if (Subscribe === "🤍") {
+      setSubscribe("❤");
     } else {
-      setSubscribe("Subscribe");
+      setSubscribe("🤍");
     }
   };
 
@@ -61,9 +61,11 @@ const VideoPlayer = () => {
 
   if (trendingList && trendingList.length === 0) {
     return (
-      <Container className="py-8">
+      <Container className="py-8 h-40 flex items-center justify-center">
         <Alert severity="info">
-          No trending videos available at the moment.
+          <p className="text-4xl">
+            No trending videos available at the moment.
+          </p>
         </Alert>
       </Container>
     );
@@ -89,13 +91,13 @@ const VideoPlayer = () => {
                 {data?.channelTitle}
               </h3>
               <div
-                className="border inline-block px-2 py-1 rounded-full bg-white font-bold text-zinc-700 cursor-pointer"
+                className="border inline-block px-2 py-1 rounded-full border-gray-300 hover:border-white font-bold text-zinc-700 cursor-pointer"
                 onClick={handleSubscribe}
               >
                 <span
-                  className={`text-sm transition-all duration-200 ${
-                    Subscribe === "Subscribed"
-                      ? "text-blue-500"
+                  className={`text-sm ${
+                    Subscribe === "❤"
+                      ? "text-red-500 font-bold"
                       : "text-zinc-700"
                   }`}
                 >
@@ -113,7 +115,7 @@ const VideoPlayer = () => {
       <div className="lg:col-span-1 p-4">
         <div className="rounded-xl shadow-lg overflow-hidden bg-gray-300">
           <h2 className="text-xl font-semibold p-4 border-b text-gray-800 items-center flex justify-center ">
-            Trending Music
+            Music
           </h2>
           <div className="overflow-y-auto max-h-[calc(100vh-150px)]">
             {pendingTrendingList
@@ -165,10 +167,10 @@ const VideoPlayer = () => {
                       <h3 className="font-medium text-sm text-gray-800 line-clamp-2">
                         {video.title}
                       </h3>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-600 font-mono mt-1">
                         {video.channelTitle}
                       </p>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-700 font-semibold">
                         {video.publishedTime} • {video.viewCount}
                       </p>
                     </div>

@@ -6,7 +6,7 @@ import type {
   VideoDetailResponse,
 } from "../types/Types";
 
-const API_KEY = "AIzaSyB3j0A83_brhyxpauG5Rk92YQIy-nzMFxY";
+const API_KEY = "AIzaSyCuBAog_jEi3VWpg0cmiFGo7aQkeROyN_k";
 const BASE_URL = "https://www.googleapis.com/youtube/v3";
 
 export const formatDuration = (duration: string): string => {
@@ -74,7 +74,7 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
       params: {
         part: "snippet,contentDetails,statistics",
         chart: "mostPopular",
-        maxResults: 45,
+        maxResults: 10,
         videoCategoryId: "10",
         key: API_KEY,
       },
@@ -113,6 +113,70 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
   }
 };
 
+// export const searchVideos = async (query: string): Promise<VideoItem[]> => {
+//   try {
+//     const searchResponse = await axios.get<SearchResponse>(
+//       `${BASE_URL}/search`,
+//       {
+//         params: {
+//           part: "snippet",
+//           maxResults: 10,
+//           q: query,
+//           type: "video",
+//           key: API_KEY,
+//         },
+//       }
+//     );
+
+//     if (!searchResponse.data.items.length) return [];
+
+//     const videoIds = searchResponse.data.items
+//       .filter((item) => item.id.videoId)
+//       .map((item) => item.id.videoId);
+
+//     const detailsResponse = await axios.get<VideoDetailResponse>(
+//       `${BASE_URL}/videos`,
+//       {
+//         params: {
+//           part: "contentDetails,statistics,snippet",
+//           id: videoIds.join(","),
+//           key: API_KEY,
+//         },
+//       }
+//     );
+
+//     return detailsResponse.data.items.map(
+//       (item: {
+//         contentDetails: { duration: string };
+//         id: any;
+//         snippet: {
+//           title: any;
+//           channelTitle: any;
+//           thumbnails: { high: { url: any } };
+//         };
+//         statistics: { viewCount: string };
+//       }) => {
+//         const durationInSeconds = parseDurationToSeconds(
+//           item.contentDetails.duration
+//         );
+//         return {
+//           id: item.id,
+//           title: item.snippet.title,
+//           channelTitle: item.snippet.channelTitle,
+//           thumbnail: item.snippet.thumbnails.high.url,
+//           duration: formatDuration(item.contentDetails.duration),
+//           viewCount: formatViewCount(item.statistics.viewCount),
+//           startTime: 0,
+//           endTime: durationInSeconds,
+//         };
+//       }
+//     );
+//   } catch (error) {
+//     console.error("Error searching videos:", error);
+//     return [];
+//   }
+// };
+
 export const searchVideos = async (query: string): Promise<VideoItem[]> => {
   try {
     const searchResponse = await axios.get<SearchResponse>(
@@ -145,32 +209,23 @@ export const searchVideos = async (query: string): Promise<VideoItem[]> => {
       }
     );
 
-    return detailsResponse.data.items.map(
-      (item: {
-        contentDetails: { duration: string };
-        id: any;
-        snippet: {
-          title: any;
-          channelTitle: any;
-          thumbnails: { high: { url: any } };
-        };
-        statistics: { viewCount: string };
-      }) => {
-        const durationInSeconds = parseDurationToSeconds(
-          item.contentDetails.duration
-        );
+    return detailsResponse.data.items
+      .filter((item) => item.contentDetails?.duration)
+      .map((item) => {
+        const duration = item.contentDetails.duration;
+        const durationInSeconds = parseDurationToSeconds(duration);
+
         return {
           id: item.id,
           title: item.snippet.title,
           channelTitle: item.snippet.channelTitle,
           thumbnail: item.snippet.thumbnails.high.url,
-          duration: formatDuration(item.contentDetails.duration),
+          duration: formatDuration(duration),
           viewCount: formatViewCount(item.statistics.viewCount),
           startTime: 0,
           endTime: durationInSeconds,
         };
-      }
-    );
+      });
   } catch (error) {
     console.error("Error searching videos:", error);
     return [];

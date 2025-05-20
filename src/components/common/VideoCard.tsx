@@ -1,23 +1,30 @@
-import type { YouTubeVideo, VideoItem } from "../../types/Types";
+import type { VideoItem } from "../../types/Types";
 import { User, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { FaPlay } from "react-icons/fa";
+import { useState } from "react";
 
 type VideoCardProps = {
   video: VideoItem;
 };
 export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
-// export const VideoCard = ({ video }: { video: YouTubeVideo }) => {
   const navigate = useNavigate();
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     navigate(`/watch/${video.id}`, { state: { video } });
   };
+
   return (
     <div
       onClick={handleClick}
       className="h-full flex flex-col bg-black rounded-lg overflow-hidden py-1 transition-shadow duration-300 justify-between"
     >
-      <div className="relative p-3 hover:scale-105 transition-all duration-700">
+      <div
+        className="relative p-3 hover:scale-105 transition-all duration-700"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
         <img
           src={video.thumbnail}
           alt={video.title}
@@ -26,11 +33,11 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
         <div
           className={`absolute bottom-2 right-2 bg-black bg-opacity-70 text-white px-2 py-1 rounded text-xs font-medium`}
         >
-          {video.duration}
+          {isHovered ? <FaPlay /> : video.duration}{" "}
         </div>
       </div>
       <div className="p-4 flex-grow flex flex-col">
-        <h6 className="font-bold text-shadow-lg text-lg text-pretty -tracking-tighter line-clamp-2">
+        <h6 className="font-bold text-shadow-lg text-lg text-pretty -tracking-tighter line-clamp-2 hover:underline">
           {video.title}
         </h6>
 

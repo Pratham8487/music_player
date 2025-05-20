@@ -1,22 +1,44 @@
 import { useQuery } from "@tanstack/react-query";
 import { Container, Alert } from "@mui/material";
-import { getTrendingVideos } from "../../api/YouTubeApi";
+import { getTrendingVideos, searchVideos } from "../../api/YouTubeApi";
 import { VideoCard } from "./VideoCard";
-
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loader from "../common/Loader";
+import { useSearch } from "../../context/SearchContext";
+import type { VideoItem } from "../../types/Types";
 
 const TrendingVideosGrid = () => {
-  const { data, isPending, isError, error } = useQuery({
-    queryKey: ["trendingVideos"],
-    queryFn: () => getTrendingVideos(),
+  const { query, setQuery } = useSearch();
+  const navigate = useNavigate();
+
+  const handleNextPage = (video: VideoItem) => {
+    navigate(`/watch/${video.id}`, { state: { video } });
+  };
+
+  const searchQuery = useQuery({
+    queryKey: ["searchMusic", query],
+    queryFn: () => searchVideos(query),
+    enabled: !!query,
     staleTime: 60 * 1000,
   });
+
+  const trendingMusic = useQuery({
+    queryKey: ["trendingMusic"],
+    queryFn: () => getTrendingVideos(),
+    enabled: !query,
+    staleTime: 60 * 1000,
+  });
+
+  const data = query ? searchQuery.data : trendingMusic.data;
+  const isPending = query ? searchQuery.isLoading : trendingMusic.isLoading;
+  const isError = query ? searchQuery.isError : trendingMusic.isError;
+
+  console.log("Data------\n", data);
 
   if (isPending) return <Loader />;
 
   if (isError) {
-    console.error(error, "\t:Error");
     return (
       <Container className="py-8">
         <Alert severity="error" className="mb-4">
@@ -36,32 +58,60 @@ const TrendingVideosGrid = () => {
     );
   }
 
-  const date = new Date().toLocaleDateString();
-  console.log(date);
+  const handleSearchQuery = (value: string) => {
+    setQuery(value);
+  };
 
   return (
     <Container className="py-8">
-      <div className="">
-        <div className="space-x-3 p-2">
-          <div className="border inline-block px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer">
-            <span>All</span>
-          </div>
-          <div className="border inline-block px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer">
-            <span>Trending</span>
-          </div>
+      <div className="flex flex-wrap gap-3 p-2 justify-center md:justify-start animate-pulse">
+        <div
+          className="border px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer text-sm sm:text-base"
+          onClick={() => handleSearchQuery("All Bollywood Songs")}
+        >
+          <span>All</span>
+        </div>
+        <div
+          className="border px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer text-sm sm:text-base"
+          onClick={() => handleSearchQuery("Trending Bollywood Songs")}
+        >
+          <span>Trending</span>
+        </div>
+        <div
+          className="border px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer text-sm sm:text-base"
+          onClick={() => handleSearchQuery("Bollywood Romantic Songs")}
+        >
+          <span>Romance</span>
+        </div>
+        <div
+          className="border px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer text-sm sm:text-base"
+          onClick={() => handleSearchQuery("BollyWood Party Songs")}
+        >
+          <span>BollyWood Party</span>
+        </div>
+        <div
+          className="border px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer text-sm sm:text-base"
+          onClick={() => handleSearchQuery("India’s Biggest Hits Songs")}
+        >
+          <span>India’s Biggest Hits</span>
+        </div>
+        <div
+          className="border px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer text-sm sm:text-base"
+          onClick={() => handleSearchQuery("T-Series Songs")}
+        >
+          <span>T-Series</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
         {data.map((video) => (
-          <Link
+          <div
             key={video.id}
-            to={`/watch/${video.id}`}
-            state={{ video }}
+            onDoubleClick={() => handleNextPage(video)}
             className="block cursor-pointer"
           >
             <VideoCard video={video} />
-          </Link>
+          </div>
         ))}
       </div>
     </Container>
@@ -69,104 +119,3 @@ const TrendingVideosGrid = () => {
 };
 
 export default TrendingVideosGrid;
-
-
-
-
-// import { useQuery } from "@tanstack/react-query";
-// import { Container, Alert } from "@mui/material";
-// import { getTrendingVideos, searchVideos } from "../../api/YouTubeApi";
-// import { VideoCard } from "./VideoCard";
-// import { Link } from "react-router-dom";
-// import Loader from "../common/Loader";
-// import { useSearch } from "../../context/SearchContext";
-// import type { VideoItem } from "../../types/Types"; // ✅ Type for video data from API
-
-// const TrendingVideosGrid = () => {
-//   const { searchQuery } = useSearch(); // ✅ custom context for current search text
-
-//   // ✅ Fetch trending videos if no search query
-//   const trendingQuery = useQuery({
-//     queryKey: ["trendingVideos"],
-//     queryFn: () => getTrendingVideos(),
-//     staleTime: 60 * 1000,
-//     enabled: !searchQuery
-//   });
-
-//   // ✅ Fetch search results if query is active
-//   const searchResults = useQuery({
-//     queryKey: ["searchVideos", searchQuery],
-//     queryFn: () => searchVideos(searchQuery),
-//     staleTime: 30 * 1000,
-//     enabled: !!searchQuery
-//   });
-
-//   // ✅ Choose which data to use
-//   const { data, isPending, isError, error } = searchQuery 
-//     ? searchResults 
-//     : trendingQuery;
-
-//   // ✅ Show loading spinner
-//   if (isPending) return <Loader />;
-
-//   // ✅ Error state
-//   if (isError) {
-//     console.error(error, "\t:Error");
-//     return (
-//       <Container className="py-8">
-//         <Alert severity="error" className="mb-4">
-//           Error loading videos. Please try again later.
-//         </Alert>
-//       </Container>
-//     );
-//   }
-
-//   // ✅ No data
-//   if (!data || data.length === 0) {
-//     return (
-//       <Container className="py-8">
-//         <Alert severity="info">
-//           {searchQuery 
-//             ? `No results found for "${searchQuery}". Try different keywords.` 
-//             : "No trending videos available at the moment."}
-//         </Alert>
-//       </Container>
-//     );
-//   }
-
-//   // ✅ Render video grid
-//   return (
-//     <Container className="py-8">
-//       <div>
-//         <div className="space-x-3 p-2">
-//           <div className="border inline-block px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer">
-//             <span>All</span>
-//           </div>
-//           <div className="border inline-block px-4 py-2 rounded-xl bg-white font-bold text-gray-600 cursor-pointer">
-//             <span>Trending</span>
-//           </div>
-//           {searchQuery && (
-//             <div className="inline-block px-4 py-2 font-bold text-white">
-//               <span>Search results for: "{searchQuery}"</span>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-//         {data.map((video: VideoItem) => (
-//           <Link
-//             key={video.id}
-//             to={`/watch/${video.id}`}
-//             state={{ video }}
-//             className="block cursor-pointer"
-//           >
-//             <VideoCard video={video} /> 
-//           </Link>
-//         ))}
-//       </div>
-//     </Container>
-//   );
-// };
-
-// export default TrendingVideosGrid;

@@ -1,17 +1,17 @@
-import { createContext, useState, useContext, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode } from "react";
 
-interface SearchContextType {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-}
+type SearchContextType = {
+  query: string;
+  setQuery: (value: string) => void;
+};
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [query, setQuery] = useState("");
 
   return (
-    <SearchContext.Provider value={{ searchQuery, setSearchQuery }}>
+    <SearchContext.Provider value={{ query, setQuery }}>
       {children}
     </SearchContext.Provider>
   );
@@ -19,7 +19,7 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
 
 export const useSearch = () => {
   const context = useContext(SearchContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("useSearch must be used within a SearchProvider");
   }
   return context;

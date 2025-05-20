@@ -17,9 +17,10 @@ const Loader = () => {
   return (
     <div className="w-full min-h-screen bg-black flex flex-col items-center justify-center">
       <div className="mb-12 flex items-center">
-        <h1 className="text-4xl font-bold">
+        <h1 className="text-4xl font-bold space-y-3">
           <span className="text-red-500">U</span>
-          <span className="text-white">-Tube</span>
+          <span className="text-red-200 font-mono">-Tube</span>{" "}<br/>
+          <span className="text-zinc-600 font-semibold font-mono">Music</span>
         </h1>
       </div>
 
