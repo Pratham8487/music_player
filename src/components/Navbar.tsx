@@ -1,18 +1,16 @@
 import { IoHomeOutline } from "react-icons/io5";
-// import { SlPlaylist } from "react-icons/sl";
 import { MdQueueMusic } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
 import { useEffect, useState } from "react";
+import Tooltip from "./common/TooltipWrapper";
+import { MdCancel } from "react-icons/md";
 
 const Navbar = () => {
   const { setQuery } = useSearch();
   const [input, setInput] = useState("");
-  const [showTooltip, setShowTooltip] = useState(false);
-
-  const handleToolTip = () => setShowTooltip(true);
-  const hideToolTip = () => setShowTooltip(false);
+  const [inputLength, setInputLength] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,7 +20,10 @@ const Navbar = () => {
     return () => clearTimeout(timer);
   }, [input, setQuery]);
 
-  // console.log("query:- ", query);
+  useEffect(() => {
+    setInputLength(input.length > 0);
+  }, [input]);
+
   return (
     <nav className="shadow-sm sticky top-0 z-50 border-b border-gray-800 bg-black">
       <div className="px-5 py-3 flex justify-between items-center">
@@ -47,26 +48,24 @@ const Navbar = () => {
               placeholder="What do you want to play?"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              autoFocus={true}
             />
           </div>
+          {inputLength && (
+            <div className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer">
+              <MdCancel
+                className="w-5 h-5 text-gray-400 hover:text-white"
+                onClick={() => setInput("")}
+              />
+            </div>
+          )}
         </div>
 
-        <Link to={`/queue`}>
-          <div
-            className="relative"
-            onMouseEnter={handleToolTip}
-            onMouseLeave={hideToolTip}
-          >
-            <div className="flex items-center space-x-4 gap-3 border border-gray-700 rounded-xl p-3 hover:scale-110 transition-all duration-300 hover:rounded-2xl cursor-pointer">
-              <MdQueueMusic className="w-7 h-7 text-white" />
-            </div>
-
-            {showTooltip && (
-              <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 p-2 bg-black text-white text-md font-mono rounded-lg shadow-lg z-10">
-                Queue
-              </div>
-            )}
-          </div>
+        <Link to={`/yourqueue`}>
+          <Tooltip
+            children={<MdQueueMusic className="w-7 h-7 text-white" />}
+            tooltipText="Queue"
+          />
         </Link>
       </div>
     </nav>

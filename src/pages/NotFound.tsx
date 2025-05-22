@@ -6,7 +6,7 @@ function NotFoundPage() {
     navigate(-1);
   };
   return (
-    <div>
+    <div className="min-h-screen">
       <h1 className="text-4xl font-bold text-center mt-20 text-red-500">
         <span className="font-bold text-red-700">404</span> - Page Not Found
       </h1>
@@ -17,9 +17,11 @@ function NotFoundPage() {
       <div className="flex items-center justify-center">
         <p
           onClick={handleGoBack}
-          className="text-center my-4 cursor-pointer text-blue-500 hover:underline"
+          className="text-center my-4 hover:underline"
         >
-          Go back
+          <button className="mt-6 inline-block px-6 py-2 bg-red-600 hover:bg-red-700 rounded-md transition-colors cursor-pointer">
+            Explore Music
+          </button>
         </p>
       </div>
     </div>

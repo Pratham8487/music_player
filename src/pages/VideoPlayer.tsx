@@ -115,8 +115,9 @@ const VideoPlayer = () => {
 
         <div className="lg:col-span-1 p-4">
           <div className="rounded-xl shadow-lg overflow-hidden bg-gray-950 text-white ">
-            <h2 className="text-xl font-semibold p-4 border-b text-white items-center flex justify-center ">
-              Music
+            <h2 className="text-xl font-semibold p-4 border-b text-red-200 items-center flex justify-center ">
+              <span className="text-red-700 ">U</span>-Tube{" "}
+              <span className="text-zinc-600 font-semibold">Music</span>
             </h2>
             <div className="overflow-y-auto max-h-[calc(100vh-200px)]">
               {pendingTrendingList

@@ -19,7 +19,7 @@ function App() {
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
               <Route path="/watch/:id" element={<VideoPlayer />} />
-              <Route path="/queue" element={<QueuePage />} />
+              <Route path="/yourqueue" element={<QueuePage />} />
               <Route path="*" element={<FileNotFound />} />
             </Route>
           </Routes>

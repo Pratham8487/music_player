@@ -11,8 +11,12 @@ type VideoCardProps = {
 };
 export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const navigate = useNavigate();
-  const { queue, addToQueue } = useQueue();
+  const { queue, addToQueue, removeFromQueue } = useQueue();
   const [isHovered, setIsHovered] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+
+  const handleToolTip = () => setShowTooltip(true);
+  const hideToolTip = () => setShowTooltip(false);
 
   const handleClick = () => {
     navigate(`/watch/${video.id}`, { state: { video } });
@@ -54,15 +58,31 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
               {video.channelTitle}
             </p>
           </div>
-          <MdQueueMusic
-            onClick={(e) => {
-              e.stopPropagation();
-              addToQueue(video.id!);
-            }}
-            className={`hover:scale-180 scale-160 transition-all duration-300 cursor-pointer ${
-              queue.includes(video.id!) ? "text-green-500" : ""
-            }`}
-          />
+
+          <div className="relative inline-block">
+            <MdQueueMusic
+              onClick={(e) => {
+                e.stopPropagation();
+                if (queue.includes(video.id!)) {
+                  removeFromQueue(video.id!);
+                } else {
+                  addToQueue(video.id!);
+                }
+              }}
+              onMouseEnter={handleToolTip}
+              onMouseLeave={hideToolTip}
+              className={`hover:scale-180 scale-160 transition-all duration-300 cursor-pointer ${
+                queue.includes(video.id!) ? "text-green-500" : ""
+              }`}
+            />
+            {showTooltip && (
+              <h6 className="absolute top-full left-1/2 -translate-x-1/2 mt-1 p-1 bg-black text-white text-[10px] font-mono rounded shadow z-10 text-pretty ">
+                {queue.includes(video.id!)
+                  ? "Remove from Queue"
+                  : "Add to Queue"}
+              </h6>
+            )}
+          </div>
         </div>
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-center">

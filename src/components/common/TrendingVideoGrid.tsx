@@ -25,13 +25,6 @@ const TrendingVideosGrid = () => {
     navigate(`/watch/${video.id}`, { state: { video } });
   };
 
-  const searchQuery = useQuery({
-    queryKey: ["searchMusic", query],
-    queryFn: () => searchVideos(query),
-    enabled: !!query,
-    staleTime: 60 * 1000,
-  });
-
   const trendingMusic = useQuery({
     queryKey: ["trendingMusic"],
     queryFn: () => getTrendingVideos(),
@@ -39,11 +32,27 @@ const TrendingVideosGrid = () => {
     staleTime: 60 * 1000,
   });
 
+  const searchQuery = useQuery({
+    queryKey: ["searchMusic", query],
+    queryFn: () => searchVideos(query),
+    enabled: !!query,
+    staleTime: 60 * 1000,
+  });
+
+  // const trendingMusic = useInfiniteQuery({
+  //   queryKey: ["trendingMusic"],
+  //   queryFn: ({ pageParam = "" }) => getTrendingVideos(pageParam),
+  //   initialPageParam: "",
+  //   getNextPageParam: (lastPage) => lastPage.nextPageToken,
+  //   enabled: !query,
+  //   staleTime: 60 * 1000,
+  // });
+
   const data = query ? searchQuery.data : trendingMusic.data;
   const isPending = query ? searchQuery.isLoading : trendingMusic.isLoading;
   const isError = query ? searchQuery.isError : trendingMusic.isError;
 
-  console.log("Data------\n", data);
+  console.log("Data:-\n", data);
 
   if (isPending) return <Loader />;
 
@@ -57,7 +66,7 @@ const TrendingVideosGrid = () => {
     );
   }
 
-  if (!data || data.length === 0) {
+  if (!data) {
     return (
       <Container className="py-8">
         <Alert severity="info">
@@ -85,7 +94,7 @@ const TrendingVideosGrid = () => {
             onDoubleClick={() => handleNextPage(video)}
             className="block cursor-pointer"
           >
-            <VideoCard  video={video} />
+            <VideoCard video={video} />
           </div>
         ))}
       </div>

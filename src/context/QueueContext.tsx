@@ -73,7 +73,6 @@ export const QueueProvider: React.FC<{ children: ReactNode }> = ({
     return stored ? JSON.parse(stored) : [];
   });
 
-  // Sync queue with localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(queue));
   }, [queue]);
