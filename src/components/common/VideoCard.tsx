@@ -2,19 +2,25 @@ import type { VideoItem } from "../../types/Types";
 import { User, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FaPlay } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { MdQueueMusic } from "react-icons/md";
+import { useQueue } from "../../context/QueueContext";
 
 type VideoCardProps = {
   video: VideoItem;
 };
 export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const navigate = useNavigate();
+  const { queue, addToQueue } = useQueue();
   const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     navigate(`/watch/${video.id}`, { state: { video } });
   };
 
+  useEffect(() => {
+    console.log("Queue:- ", queue);
+  }, [queue]);
   return (
     <div
       onClick={handleClick}
@@ -41,11 +47,22 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
           {video.title}
         </h6>
 
-        <div className="mt-2 flex items-center">
-          <User size={16} className="mr-1 text-gray-300 " />
-          <p className="flex-grow text-sm text-gray-300 -tracking-tighter font-semibold">
-            {video.channelTitle}
-          </p>
+        <div className="mt-2 flex items-center justify-between">
+          <div className="flex items-center justify-between">
+            <User size={16} className="mr-1 text-gray-300 " />
+            <p className="flex-grow text-sm text-gray-300 -tracking-tighter font-semibold text-wrap">
+              {video.channelTitle}
+            </p>
+          </div>
+          <MdQueueMusic
+            onClick={(e) => {
+              e.stopPropagation();
+              addToQueue(video.id!);
+            }}
+            className={`hover:scale-180 scale-160 transition-all duration-300 cursor-pointer ${
+              queue.includes(video.id!) ? "text-green-500" : ""
+            }`}
+          />
         </div>
         <div className="mt-2 flex items-center justify-between">
           <div className="flex items-center">

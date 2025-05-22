@@ -150,7 +150,7 @@ const VideoPlayer = () => {
                     <div
                       key={video.id}
                       className={`flex p-3 cursor-pointer hover:bg-gray-800 transition-all duration-500 ${
-                        selectedVideo.id === video.id ? "bg-gray-100" : ""
+                        selectedVideo.id === video.id ? "bg-gray-800" : ""
                       }`}
                       onClick={() => setSelectedVideo(video)}
                     >
