@@ -39,20 +39,11 @@ const TrendingVideosGrid = () => {
     staleTime: 60 * 1000,
   });
 
-  // const trendingMusic = useInfiniteQuery({
-  //   queryKey: ["trendingMusic"],
-  //   queryFn: ({ pageParam = "" }) => getTrendingVideos(pageParam),
-  //   initialPageParam: "",
-  //   getNextPageParam: (lastPage) => lastPage.nextPageToken,
-  //   enabled: !query,
-  //   staleTime: 60 * 1000,
-  // });
-
   const data = query ? searchQuery.data : trendingMusic.data;
   const isPending = query ? searchQuery.isLoading : trendingMusic.isLoading;
   const isError = query ? searchQuery.isError : trendingMusic.isError;
 
-  console.log("Data:-\n", data);
+  // console.log("Data:-\n", data);
 
   if (isPending) return <Loader />;
 
@@ -68,13 +59,14 @@ const TrendingVideosGrid = () => {
 
   if (!data) {
     return (
-      <Container className="py-8">
+      <Container className="py-8 max-h-80">
         <Alert severity="info">
           No trending videos available at the moment.
         </Alert>
       </Container>
     );
   }
+
   const handleCatergoryButtonQuery = (query: string) => {
     setQuery(query);
   };
@@ -84,7 +76,6 @@ const TrendingVideosGrid = () => {
       <CategoryButtons
         categories={categories}
         onCategoryClick={handleCatergoryButtonQuery}
-        animate={false}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">

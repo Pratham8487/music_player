@@ -74,7 +74,7 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
       params: {
         part: "snippet,contentDetails,statistics",
         chart: "mostPopular",
-        maxResults: 10,
+        maxResults: 30,
         videoCategoryId: "10",
         key: API_KEY,
       },
@@ -86,10 +86,7 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
         snippet: {
           title: any;
           channelTitle: any;
-          thumbnails: {
-            maxres: any;
-            high: { url: any };
-          };
+          thumbnails: { high: { url: any } };
           publishedAt: any;
         };
         statistics: { viewCount: string };
@@ -102,7 +99,7 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
           id: item.id,
           title: item.snippet.title,
           channelTitle: item.snippet.channelTitle,
-          thumbnail: item.snippet.thumbnails.maxres.url,
+          thumbnail: item.snippet.thumbnails.high.url,
           duration: formatDuration(item.contentDetails.duration),
           viewCount: formatViewCount(item.statistics.viewCount),
           startTime: 0,
@@ -116,66 +113,6 @@ export const getTrendingVideos = async (): Promise<YouTubeVideo[]> => {
   }
 };
 
-
-// export const getTrendingVideos = async (
-//   pageParam: string = ""
-// ): Promise<YouTubeVideoResponse> => {
-//   try {
-//     const res = await axios.get(`${BASE_URL}/videos`, {
-//       params: {
-//         part: "snippet,contentDetails,statistics",
-//         chart: "mostPopular",
-//         maxResults: 10,
-//         videoCategoryId: "10",
-//         pageToken: pageParam,
-//         key: API_KEY,
-//       },
-//     });
-
-//     return {
-//       items: res.data.items.map(
-//         (item: {
-//           contentDetails: { duration: string };
-//           id: any;
-//           snippet: {
-//             title: any;
-//             channelTitle: any;
-//             thumbnails: {
-//               maxres: any;
-//               high: { url: any };
-//             };
-//             publishedAt: any;
-//           };
-//           statistics: { viewCount: string };
-//         }) => {
-//           const durationInSeconds = parseDurationToSeconds(
-//             item.contentDetails.duration
-//           );
-//           return {
-//             publishedTime: getRelativeTimeAgo(item.snippet.publishedAt),
-//             id: item.id,
-//             title: item.snippet.title,
-//             channelTitle: item.snippet.channelTitle,
-//             thumbnail: item.snippet.thumbnails?.maxres?.url ?? item.snippet.thumbnails?.high?.url,
-//             duration: formatDuration(item.contentDetails.duration),
-//             viewCount: formatViewCount(item.statistics.viewCount),
-//             startTime: 0,
-//             endTime: durationInSeconds,
-//           };
-//         }
-//       ),
-//       nextPageToken: res.data.nextPageToken,
-//     };
-//   } catch (error) {
-//     console.error("Error fetching trending videos:", error);
-//     return {
-//       items: [],
-//       nextPageToken: undefined,
-//     };
-//   }
-// };
-
-
 export const searchVideos = async (query: string): Promise<VideoItem[]> => {
   try {
     const searchResponse = await axios.get<SearchResponse>(
@@ -183,7 +120,7 @@ export const searchVideos = async (query: string): Promise<VideoItem[]> => {
       {
         params: {
           part: "snippet",
-          maxResults: 10,
+          maxResults: 30,
           q: query,
           type: "video",
           key: API_KEY,

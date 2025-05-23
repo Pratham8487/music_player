@@ -6,6 +6,8 @@ import { getVideoById, getTrendingVideos } from "../api/YouTubeApi";
 import Loader from "../components/common/Loader";
 import { Container, Alert } from "@mui/material";
 import Skeleton from "react-loading-skeleton";
+import Tooltip from "../components/common/TooltipWrapper";
+import { AiOutlineLike, AiOutlineDislike } from "react-icons/ai";
 
 interface VideoData {
   id: string;
@@ -14,20 +16,15 @@ interface VideoData {
 
 const VideoPlayer = () => {
   const { id } = useParams();
+  const likeIcon = <AiOutlineLike />;
+  const dislikeIcon = <AiOutlineDislike />;
+  const [isSubscribed, setIsSubscribed] = useState(false);
+
   const location = useLocation();
   const stateVideo = location.state?.video;
-  const [Subscribe, setSubscribe] = useState("🤍");
 
-  const [trendingVideos] = useState<VideoData[]>([
-    { id: "wGv79GFS4Vg", title: "Introduction To WiseGPT" },
-    { id: "dQw4w9WgXcQ", title: "Rick Astley - Never Gonna Give You Up" },
-    { id: "jNQXAC9IVRw", title: "Me at the zoo" },
-    { id: "kJQP7kiw5Fk", title: "Despacito" },
-  ]);
-
-  const [selectedVideo, setSelectedVideo] = useState<VideoData>(
-    stateVideo || trendingVideos[0]
-  );
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<VideoData>(stateVideo);
 
   const { data: trendingList, isPending: pendingTrendingList } = useQuery({
     queryKey: ["trendingVideos"],
@@ -42,11 +39,7 @@ const VideoPlayer = () => {
   });
 
   const handleSubscribe = () => {
-    if (Subscribe === "🤍") {
-      setSubscribe("❤");
-    } else {
-      setSubscribe("🤍");
-    }
+    setIsSubscribed((prev) => !prev);
   };
 
   if (isPending) return <Loader />;
@@ -86,29 +79,38 @@ const VideoPlayer = () => {
               {data?.title}
             </h6>
             <div>
-              <div className="flex justify-items-start space-x-5 items-center">
+              <div className="flex justify-items-start space-x-5 items-center pb-5 pt-1">
                 <img src={data?.thumbnail} className="rounded-full w-10 h-10" />
                 <h3 className="space-x-8 font-bold text-md text-pretty -tracking-tighter line-clamp-2">
                   {data?.channelTitle}
                 </h3>
-                <div
-                  className="border inline-block px-2 py-1 rounded-full border-gray-300 hover:border-white font-bold text-zinc-700 cursor-pointer"
+
+                <Tooltip
+                  children={isSubscribed ? dislikeIcon : likeIcon}
+                  tooltipText={isSubscribed ? `UnLike` : "Like"}
                   onClick={handleSubscribe}
-                >
-                  <span
-                    className={`text-sm ${
-                      Subscribe === "❤"
-                        ? "text-red-500 font-bold"
-                        : "text-zinc-700"
-                    }`}
-                  >
-                    {Subscribe}
-                  </span>
-                </div>
+                />
               </div>
-              <h4 className="font-semibold text-sm text-pretty -tracking-tighter line-clamp-2">
-                {data?.description}
-              </h4>
+              <div className="bg-zinc-700 rounded-md px-2 py-1">
+                <p
+                  className={`font-semibold text-sm text-pretty -tracking-tighter ${
+                    isExpanded ? "line-clamp-0" : "line-clamp-3"
+                  }`}
+                >
+                  {data?.description}
+                </p>
+
+                <span
+                  className={`hover:underline cursor-pointer ${
+                    isExpanded
+                      ? "text-gray-300 underline hover:text-gray-400"
+                      : "text-blue-400"
+                  }`}
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  {isExpanded ? "show less" : "more"}
+                </span>
+              </div>
             </div>
           </div>
         </div>

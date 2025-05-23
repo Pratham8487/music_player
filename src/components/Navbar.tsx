@@ -1,7 +1,7 @@
 import { IoHomeOutline } from "react-icons/io5";
 import { MdQueueMusic } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
 import { useEffect, useState } from "react";
 import Tooltip from "./common/TooltipWrapper";
@@ -11,6 +11,7 @@ const Navbar = () => {
   const { setQuery } = useSearch();
   const [input, setInput] = useState("");
   const [inputLength, setInputLength] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,6 +23,13 @@ const Navbar = () => {
 
   useEffect(() => {
     setInputLength(input.length > 0);
+  }, [input]);
+
+  useEffect(() => {
+    const gotoHome = setTimeout(() => {
+      navigate(`/`);
+    }, 2500);
+    return () => clearTimeout(gotoHome);
   }, [input]);
 
   return (
@@ -44,7 +52,7 @@ const Navbar = () => {
           <div className="">
             <input
               type="text"
-              className="bg-zinc-900 border border-zinc-700 text-white text-sm rounded-full block w-full pl-10 pr-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-gray-500"
+              className="bg-zinc-900 border border-zinc-700 text-white text-sm rounded-full block w-full pl-10 pr-9 py-2.5 focus:outline-none focus:ring-1 focus:ring-gray-500 text-pretty "
               placeholder="What do you want to play?"
               value={input}
               onChange={(e) => setInput(e.target.value)}

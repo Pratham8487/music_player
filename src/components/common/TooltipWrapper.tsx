@@ -2,14 +2,16 @@ import React, { useState } from "react";
 
 type TooltipWrapperProps = {
   children: React.ReactNode;
-  tooltipText: string;
-  position?: "top" | "bottom"; // optional positioning
+  tooltipText: string | React.ReactNode;
+  position?: "top" | "bottom"; 
+  onClick?: () => void;
 };
 
 const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
   children,
   tooltipText,
   position = "bottom",
+  onClick,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
@@ -18,6 +20,7 @@ const TooltipWrapper: React.FC<TooltipWrapperProps> = ({
       className="relative flex justify-center items-center"
       onMouseEnter={() => setShowTooltip(true)}
       onMouseLeave={() => setShowTooltip(false)}
+      onClick={onClick}
     >
       <div className="flex items-center border border-gray-700 rounded-xl p-3 hover:scale-110 transition-all duration-300 hover:rounded-2xl cursor-pointer">
         {children}

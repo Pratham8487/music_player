@@ -1,4 +1,6 @@
 import React from "react";
+import Tooltip from "./TooltipWrapper";
+import { RiErrorWarningLine } from "react-icons/ri";
 
 type Category = {
   label: string;
@@ -14,13 +16,11 @@ type CategoryButtonsProps = {
 const CategoryButtons: React.FC<CategoryButtonsProps> = ({
   categories,
   onCategoryClick,
-  animate = false,
 }) => {
   return (
     <div
-      className={`flex flex-wrap gap-3 p-2 justify-center md:justify-start ${
-        animate ? "animate-pulse" : ""
-      }`}
+      className={`flex flex-wrap gap-3 p-2 justify-center md:justify-start
+  `}
     >
       {categories.map((category, index) => (
         <div
@@ -31,6 +31,14 @@ const CategoryButtons: React.FC<CategoryButtonsProps> = ({
           <span>{category.label}</span>
         </div>
       ))}
+      <Tooltip
+        children={<RiErrorWarningLine className="w-5 h-5" />}
+        tooltipText={
+          <p className="whitespace-nowrap text-[0.65rem] md:text-xs animate-bounce">
+            Showing the Best Results !!
+          </p>
+        }
+      />
     </div>
   );
 };
