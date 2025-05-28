@@ -214,8 +214,11 @@ export interface VideoItem {
   };
 }
 
-
-
-
-
-
+export interface VideoPlayerProps {
+  videoId: string;
+  title?: string;
+  onNextVideo?: () => void;
+  onPreviousVideo?: () => void;
+  hasNext?: boolean;
+  hasPrevious?: boolean;
+}

@@ -14,6 +14,8 @@ const QueuePage = () => {
   const navigate = useNavigate();
   const { queue, clearQueue } = useQueue();
 
+  // console.log("Queue:", queue.slice(0, queue.length));
+
   const videoQueries = useQueries({
     queries: queue.map((id) => ({
       queryKey: ["videos", id],

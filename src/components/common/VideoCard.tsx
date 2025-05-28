@@ -8,8 +8,14 @@ import { useQueue } from "../../context/QueueContext";
 
 type VideoCardProps = {
   video: VideoItem;
+  nextVideoId?: string;
+  previousVideoId?: string;
 };
-export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
+export const VideoCard: React.FC<VideoCardProps> = ({
+  video,
+  nextVideoId,
+  previousVideoId,
+}) => {
   const navigate = useNavigate();
   const { queue, addToQueue, removeFromQueue } = useQueue();
   const [isHovered, setIsHovered] = useState(false);
@@ -19,11 +25,17 @@ export const VideoCard: React.FC<VideoCardProps> = ({ video }) => {
   const hideToolTip = () => setShowTooltip(false);
 
   const handleClick = () => {
-    navigate(`/watch/${video.id}`, { state: { video } });
+    navigate(`/watch/${video.id}`, {
+      state: {
+        video,
+        nextVideoId,
+        previousVideoId,
+      },
+    });
   };
 
   useEffect(() => {
-    console.log("Queue:- ", queue);
+    // console.log("Queue:- ", queue);
   }, [queue]);
   return (
     <div

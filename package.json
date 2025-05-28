@@ -18,6 +18,7 @@
     "react-dom": "^19.1.0",
     "react-error-boundary": "^6.0.0",
     "react-loading-skeleton": "^3.5.0",
+    "react-youtube": "^10.1.0",
     "tailwindcss": "^4.1.7"
   },
   "devDependencies": {

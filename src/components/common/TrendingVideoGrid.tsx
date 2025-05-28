@@ -43,7 +43,7 @@ const TrendingVideosGrid = () => {
   const isPending = query ? searchQuery.isLoading : trendingMusic.isLoading;
   const isError = query ? searchQuery.isError : trendingMusic.isError;
 
-  // console.log("Data:-\n", data);
+  console.log("Data:-\n", data);
 
   if (isPending) return <Loader />;
 
@@ -79,13 +79,19 @@ const TrendingVideosGrid = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
-        {data.map((video) => (
+        {data.map((video, index) => (
           <div
             key={video.id}
             onDoubleClick={() => handleNextPage(video)}
             className="block cursor-pointer"
           >
-            <VideoCard video={video} />
+            <VideoCard
+              video={video}
+              nextVideoId={
+                index < data.length - 1 ? data[index + 1].id : undefined
+              }
+              previousVideoId={index > 0 ? data[index - 1].id : undefined}
+            />
           </div>
         ))}
       </div>
