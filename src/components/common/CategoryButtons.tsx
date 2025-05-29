@@ -31,14 +31,16 @@ const CategoryButtons: React.FC<CategoryButtonsProps> = ({
           <span>{category.label}</span>
         </div>
       ))}
-      <Tooltip
-        children={<RiErrorWarningLine className="w-5 h-5" />}
-        tooltipText={
-          <p className="whitespace-nowrap text-[0.65rem] md:text-xs animate-bounce">
-            Showing the Best Results !!
-          </p>
-        }
-      />
+      <div className="hidden lg:block">
+        <Tooltip
+          children={<RiErrorWarningLine className="w-5 h-5" />}
+          tooltipText={
+            <p className="whitespace-nowrap text-[0.65rem] md:text-xs animate-bounce">
+              Showing the Best Results !!
+            </p>
+          }
+        />
+      </div>
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import { IoHomeOutline } from "react-icons/io5";
 import { MdQueueMusic } from "react-icons/md";
 import { IoSearchOutline } from "react-icons/io5";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSearch } from "../context/SearchContext";
 import { useEffect, useState } from "react";
 import Tooltip from "./common/TooltipWrapper";
@@ -11,7 +11,7 @@ const Navbar = () => {
   const { setQuery } = useSearch();
   const [input, setInput] = useState("");
   const [inputLength, setInputLength] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,12 +25,12 @@ const Navbar = () => {
     setInputLength(input.length > 0);
   }, [input]);
 
-  useEffect(() => {
-    const gotoHome = setTimeout(() => {
-      navigate(`/`);
-    }, 2500);
-    return () => clearTimeout(gotoHome);
-  }, [input]);
+  // useEffect(() => {
+  //   const gotoHome = setTimeout(() => {
+  //     navigate(`/`);
+  //   }, 2500);
+  //   return () => clearTimeout(gotoHome);
+  // }, [input]);
 
   return (
     <nav className="shadow-sm sticky top-0 z-50 border-b border-gray-800 bg-black">

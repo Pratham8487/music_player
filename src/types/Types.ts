@@ -172,7 +172,7 @@ export interface VideoItem {
   viewCount?: string;
   startTime?: number;
   endTime?: number;
-  description?: any;
+  description?: string;
   contentDetails?: {
     duration?: string;
     dimension?: string;

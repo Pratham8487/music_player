@@ -1,8 +1,6 @@
-import { ImPrevious } from "react-icons/im";
-import { BiSkipNextCircle } from "react-icons/bi";
-import { BsPlayFill, BsPauseFill } from "react-icons/bs";
-import { useState } from "react";
+import { useEffect } from "react";
 import YouTube from "react-youtube";
+import { useGlobalPlayer } from "../context/PlayerContext";
 
 interface VideoPlayerProps {
   videoId: string;
@@ -13,15 +11,14 @@ interface VideoPlayerProps {
   hasPrevious?: boolean;
 }
 
-function YouTubeVideo({
+function Player({
   videoId,
   onNextVideo,
-  onPreviousVideo,
+
   hasNext,
-  hasPrevious,
 }: VideoPlayerProps) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [player, setPlayer] = useState<any>(null);
+  const { setPlayer, setIsPlaying, setCurrentTime, setDuration } =
+    useGlobalPlayer();
 
   const opts = {
     height: "100%",
@@ -29,62 +26,63 @@ function YouTubeVideo({
     playerVars: {
       autoplay: 0,
       controls: 0,
-      modestbranding: 1,
+      modestbranding: 0,
       rel: 0,
     },
   };
 
   const onReady = (event: any) => {
-    setPlayer(event.target);
+    const playerInstance = event.target;
+    setPlayer(playerInstance);
+
+    const videoDuration = playerInstance.getDuration();
+    setDuration(videoDuration);
   };
 
-  const togglePlayPause = () => {
-    if (!player) return;
+  const onStateChange = (event: any) => {
+    const playerState = event.data;
 
-    if (isPlaying) {
-      player.pauseVideo();
-      setIsPlaying(false);
-    } else {
-      player.playVideo();
+    if (playerState === 1) {
       setIsPlaying(true);
+    } else if (playerState === 2) {
+      setIsPlaying(false);
+    } else if (playerState === 0) {
+      setIsPlaying(false);
+
+      if (hasNext && onNextVideo) {
+        onNextVideo();
+      }
     }
   };
 
+  useEffect(() => {
+    setCurrentTime(0);
+    setDuration(0);
+  }, [videoId, setCurrentTime, setDuration]);
+
   return (
-    <div className="relative bg-gray-900 gap-3">
+    <div className="relative bg-gray-900 gap-3 flex flex-col justify-evenly">
       <div className="relative w-full h-96 overflow-hidden rounded-lg">
         <YouTube
+          key={videoId}
           videoId={videoId}
           opts={opts}
           onReady={onReady}
-          className="w-full h-full"
+          onStateChange={onStateChange}
+          className="w-full h-full object-cover rounded-2xl shadow-xl"
         />
       </div>
-      <div className="p-4 bg-gray-900 bottom-16 right-4 flex gap-2 justify-center">
 
-        <button
-          onClick={onPreviousVideo}
-          disabled={!hasPrevious}
-          className="px-4 py-2 bg-zinc-500 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-700 transition-colors"
-        >
-          <ImPrevious />
-        </button>
-        <button
-          onClick={togglePlayPause}
-          className="px-4 py-2 bg-zinc-500 text-white rounded-md hover:bg-zinc-700 transition-colors"
-        >
-          {isPlaying ? <BsPauseFill size={20} /> : <BsPlayFill size={20} />}
-        </button>
-        <button
-          onClick={onNextVideo}
-          disabled={!hasNext}
-          className="px-4 py-2 bg-zinc-500 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed hover:bg-zinc-700 transition-colors"
-        >
-          <BiSkipNextCircle />
-        </button>
+      <div className="px-4 py-2 bg-gray-800 rounded-b-xl">
+        <h3 className="text-white text-lg font-semibold line-clamp-2">
+          {videoId && `Playing: ${videoId}`}
+        </h3>
+        <p className="text-gray-400 text-sm mt-1">
+          Use the bottom player for full control
+        </p>
       </div>
     </div>
   );
 }
 
-export default YouTubeVideo;
+export default Player;
